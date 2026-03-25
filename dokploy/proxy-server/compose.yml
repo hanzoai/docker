@@ -1,12 +1,11 @@
-# Proxy Server (N Server) - Nginx Frontend
+# Proxy Server - Hanzo Ingress Frontend
 version: '3.8'
 
 services:
-  nginx:
-    image: ${HANZO_IMAGE:-frappe/erpnext}:${VERSION:-latest}
+  ingress:
+    image: ghcr.io/hanzoai/ingress:latest
     platform: linux/amd64
-    container_name: hanzo-nginx
-    command: nginx-entrypoint.sh
+    container_name: hanzo-ingress
     environment:
       BACKEND: ${BACKEND_HOST}:${BACKEND_PORT:-8000}
       SOCKETIO: ${WEBSOCKET_HOST}:${WEBSOCKET_PORT:-9000}
@@ -22,8 +21,8 @@ services:
       X_XSS_PROTECTION: ${X_XSS_PROTECTION:-1; mode=block}
     volumes:
       - sites:/home/frappe/frappe-bench/sites:ro
-      - nginx_cache:/var/cache/nginx
-      - nginx_logs:/var/log/nginx
+      - ingress_cache:/var/cache/ingress
+      - ingress_logs:/var/log/ingress
     ports:
       - "${HTTP_PORT:-80}:8080"
     restart: unless-stopped
@@ -50,13 +49,13 @@ services:
     image: blacklabelops/logrotate:latest
     container_name: hanzo-logrotate
     environment:
-      LOGS_DIRECTORIES: /var/log/nginx
+      LOGS_DIRECTORIES: /var/log/ingress
       LOGROTATE_INTERVAL: daily
       LOGROTATE_COPIES: 7
       LOGROTATE_SIZE: 10M
       LOGROTATE_COMPRESSION: compress
     volumes:
-      - nginx_logs:/var/log/nginx
+      - ingress_logs:/var/log/ingress
     restart: unless-stopped
     profiles:
       - production
@@ -64,9 +63,9 @@ services:
 volumes:
   sites:
     driver: local
-  nginx_cache:
+  ingress_cache:
     driver: local
-  nginx_logs:
+  ingress_logs:
     driver: local
 
 networks:

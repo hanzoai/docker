@@ -277,35 +277,6 @@ services:
     profiles:
       - inference  # Only deploy with: docker compose --profile inference up
 
-  # Caddy - Reverse proxy with automatic HTTPS
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"  # HTTP/3
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    environment:
-      DOMAIN: ${DOMAIN:-hanzo.ai}
-      EMAIL: ${ACME_EMAIL:-admin@hanzo.ai}
-    depends_on:
-      - platform
-      - gateway
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
-    networks:
-      - hanzo-public
-
   # Prometheus - Metrics collection
   prometheus:
     image: prom/prometheus:latest
@@ -390,10 +361,6 @@ volumes:
   hanzo_models:
     driver: local
   hanzo_node_cache:
-    driver: local
-  caddy_data:
-    driver: local
-  caddy_config:
     driver: local
   prometheus_data:
     driver: local
