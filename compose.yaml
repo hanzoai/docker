@@ -50,7 +50,7 @@ services:
     <<: *customizable_image
     platform: linux/amd64
     command:
-      - nginx-entrypoint.sh
+      - static-entrypoint.sh
     environment:
       BACKEND: backend:8000
       SOCKETIO: websocket:9000

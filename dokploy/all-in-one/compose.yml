@@ -101,7 +101,7 @@ services:
     image: ${HANZO_IMAGE:-frappe/erpnext}:${VERSION:-latest}
     platform: linux/amd64
     container_name: hanzo-frontend
-    command: nginx-entrypoint.sh
+    command: static-entrypoint.sh
     environment:
       BACKEND: backend:8000
       SOCKETIO: websocket:9000
