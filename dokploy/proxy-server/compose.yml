@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   ingress:
-    image: ghcr.io/hanzoai/ingress:latest
+    image: ghcr.io/hanzoai/ingress:1.7.41
     platform: linux/amd64
     container_name: hanzo-ingress
     environment:
